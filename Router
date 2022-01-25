@@ -1,0 +1,47 @@
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+
+import routes from './routes'
+
+Vue.use(VueRouter)
+export default function (/* { store, ssrContext } */) {
+  const Router = new VueRouter({
+    scrollBehavior: () => ({ x: 0, y: 0 }),
+    routes,
+
+    // Leave these as they are and change in quasar.conf.js instead!
+    // quasar.conf.js -> build -> vueRouterMode
+    // quasar.conf.js -> build -> publicPath
+    mode: process.env.VUE_ROUTER_MODE,
+    base: process.env.VUE_ROUTER_BASE
+  })
+
+  return Router
+}
+
+
+const routes = [
+  {
+    path: '/',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/PageHome.vue'),
+        name: 'Home'
+      },
+      { 
+        path: '/about',
+        component: () => import('pages/PageAbout.vue'),
+        name: 'About'
+      }
+    ]
+  },
+
+  {
+    path: '*',
+    component: () => import('pages/Error404.vue')
+  }
+]
+
+export default routes
